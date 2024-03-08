@@ -10,8 +10,7 @@ yarn install
 
 #### Config
 
-Create .env file from .env.example
-Make sure correct the cert
+Create .env file from .env.example. Make sure correct the cert
 
 #### Update route
 

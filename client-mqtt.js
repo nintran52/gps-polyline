@@ -14,9 +14,9 @@ const options = {
   password: process.env.ThingKey,
   protocol: "mqtts", // Specify that MQTT over TLS should be used
   rejectUnauthorized: false, // Set to true if your CA certificate should be validated
-  ca: fs.readFileSync("cert/ca.crt"),
-  cert: fs.readFileSync("cert/thing.crt"),
-  key: fs.readFileSync("cert/thing.key"),
+  ca: fs.readFileSync(process.env.CertPath + "ca.crt"),
+  cert: fs.readFileSync(process.env.CertPath + "thing.crt"),
+  key: fs.readFileSync(process.env.CertPath + "thing.key"),
 };
 
 // Connect to MQTT broker
