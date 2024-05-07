@@ -29,9 +29,7 @@ client.on("connect", () => {
   tripID = uuidv4();
   startTime = moment().toISOString();
 
-  var routes = polyline.decode(
-    "gi|FmtmxR{AT}B\gBH_BGgC_@cBcA{AaAuAs@mB_Ax@[r@Q"
-  );
+  var routes = polyline.decode(process.env.Polyline);
   routes.forEach((value, index) => {
     pushMessage(value, index, routes.length - 1);
   });
@@ -72,8 +70,8 @@ let gpsTemplate = {
 let tripTemplate = {
   trip_id: "6b8b5578-e8ff-4186-b043-262921ef710a",
   bike_id: "a7a5e894-0a95-49e2-8398-80335b2665d6",
-  distance: 3000,
-  battery_usage: 4,
+  distance: 2000,
+  battery_usage: 8,
   watt_usage: 6,
   estimated_cost: 1.4,
   estimated_co2: 12,
@@ -91,11 +89,14 @@ function pushMessage(item, index, routesLength) {
       gpsTemplate.lng_deg = item[1];
 
       console.log("Location: ", JSON.stringify(gpsTemplate));
+      if (index == 0) {
+        publishTripMessage(startTime, tripID);
+      }
       client.publish(process.env.LocationTopic, JSON.stringify(gpsTemplate));
       if (index == routesLength) {
         publishTripMessage(startTime, tripID);
       }
-    }, 1000 * index);
+    }, 2000 * index);
   } else {
     console.log("Client not connected");
   }
@@ -105,6 +106,8 @@ const publishTripMessage = (startTime, tripID) => {
   if (client.connected) {
     tripTemplate.trip_id = tripID;
     tripTemplate.bike_id = process.env.BikeID;
+    tripTemplate.battery_usage = Math.floor(Math.random() * 100);
+    tripTemplate.watt_usage = Math.floor(Math.random() * 100);
     tripTemplate.start_at = startTime;
     tripTemplate.end_at = moment().toISOString();
 
